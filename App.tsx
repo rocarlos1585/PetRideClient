@@ -1,28 +1,20 @@
-
-
+import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import {
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
+import 'react-native-gesture-handler';
+import { DrawerPrincipal } from './src/navigator/DrawerPrincipal';
 
-} from 'react-native';
-import { LoginScreen } from './src/screens/LoginScreen';
 
 
 const App = () => {
 
 
   return (
-    <SafeAreaView>
-      <StatusBar barStyle= 'light-content' />
-      <LoginScreen/>
-    </SafeAreaView>
+    <NavigationContainer>
+      <DrawerPrincipal/>
+    </NavigationContainer>
   );
 };
 
-const styles = StyleSheet.create({
-
-});
-
 export default App;
+
+
