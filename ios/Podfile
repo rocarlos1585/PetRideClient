@@ -12,6 +12,8 @@ target 'PetRide' do
     :hermes_enabled => false
   )
 
+  pod 'react-native-maps', :path => '../node_modules/react-native-maps'
+
   target 'PetRideTests' do
     inherit! :complete
     # Pods for testing

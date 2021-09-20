@@ -1,9 +1,11 @@
+import { StackScreenProps } from '@react-navigation/stack'
 import React from 'react'
 import { Image, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
+interface Props extends StackScreenProps<any, any>{}
 
 
-export const LoginScreen = () => {
+export const LoginScreen = (props:Props) => {
     return (
         <View style={styles.loginContainer}>
             <ImageBackground source={require('../images/Fondo.jpg')} resizeMode="cover" style={styles.imageBackground}>
@@ -24,11 +26,11 @@ export const LoginScreen = () => {
                     keyboardType='ascii-capable'
                 />
 
-                <TouchableOpacity activeOpacity={0.9} style={styles.btnEntrar}>
+                <TouchableOpacity onPress={ () => props.navigation.navigate('drawerLogged')} activeOpacity={0.9} style={styles.btnEntrar}>
                     <Text style={styles.textEntrar}>Entrar</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity>
+                <TouchableOpacity >
                     <Text style={styles.textOlvidoPass}>¿Olvidaste tu contraseña?</Text>
                 </TouchableOpacity>
             </ImageBackground>

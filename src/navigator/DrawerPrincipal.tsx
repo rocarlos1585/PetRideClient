@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createDrawerNavigator, DrawerContentComponentProps, DrawerContentScrollView } from '@react-navigation/drawer';
 
 import { Text, useWindowDimensions, StyleSheet, Image, View } from 'react-native';
@@ -7,6 +7,22 @@ import { TouchableOpacity } from 'react-native';
 import { RegistroClienteScreen } from '../screens/RegistroClienteScreen';
 import { RegistroMascotaScreen } from '../screens/RegistroMascotaScreen';
 import { ScrollView } from 'react-native-gesture-handler';
+import { BUILDER_KEYS } from '@babel/types';
+import { HomeClientScreen } from '../screens/HomeClientScreen';
+import { LayoutMenuBottom } from '../components/LayoutMenuBottom';
+import { ViajeScreen } from '../screens/ViajeScreen';
+import { NuevoViajeForm } from '../screens/NuevoViajeForm';
+import { ViajesStackNavigator } from './ViajesStackNavigator';
+import { ModalLogOut } from '../components/ModalLogOut';
+
+
+export const jsxPrueba = () =>{
+  return(
+    <View style={{backgroundColor:'red', height:200}}>
+      <Text>componente de prueba</Text>
+    </View>
+  )
+}
 
 const Drawer = createDrawerNavigator();
 
@@ -14,22 +30,155 @@ export const  DrawerPrincipal = () => {
 
   const {width} = useWindowDimensions()
 
+
   return (
     <Drawer.Navigator
-      drawerContent={ (props:any) =><ContenidoMenu {...props}/>}
-
+      drawerContent={ (props:any) =><ContenidoMenu2 {...props}/>}
+      
       screenOptions={{
+        headerShown:false,
+        headerStyle:{backgroundColor:'transparent'},
         drawerPosition:'left',
         drawerType:(width >= 760)? ('permanent') : ('front'),
       }}
     >
-      <Drawer.Screen name="loginScreen"  component={LoginScreen} />
+      <Drawer.Screen name="homeClientScreen" initialParams={{ ComponentToRender: HomeClientScreen }} component={LayoutMenuBottom} />
+      <Drawer.Screen name="viajesStackNavigator"  initialParams={{ ComponentToRender: ViajesStackNavigator }} component={LayoutMenuBottom} />
+
       <Drawer.Screen name="registroClienteScreen"  component={RegistroClienteScreen} />
       <Drawer.Screen name="registroMascotaScreen"  component={RegistroMascotaScreen} />
       
     </Drawer.Navigator>
   );
 }
+
+const ContenidoMenu2 = (props:any) => {
+
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const openModal = () =>{
+      setModalVisible(true)
+  }
+
+  const closeModal = () =>{
+      setModalVisible(false)
+  }
+
+  return(
+    <View style={styles2.scrollViewDrawer} >
+      <ModalLogOut title="Cerrar Sesion" description="Estas seguro que quieres salir?" openModal={openModal} closeModal={closeModal} statusModal={modalVisible} />
+
+      <View style={{flex:1}}>
+        
+        <View style={styles2.drawerMenuContainer}>
+
+          <View style={styles2.avatarContainer}>
+            <Image
+                style={styles2.imageAvatar} 
+                source={require('../images/avatarPlaceHolder.png')}
+            />
+            <Text style={styles2.texAvatarNombre}>Usuario X</Text>
+            <Text style={styles2.textAvatatarCalificacion}>Calificacion</Text>
+            <Text style={styles2.textAvatarNotificaciones}>Notificaciones</Text>
+          </View>
+
+          <TouchableOpacity style={styles2.buttonMenu}>
+            <Text style={styles2.textButtonMenu}>Mis Viajes</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles2.buttonMenu}>
+            <Text style={styles2.textButtonMenu}>Pagos</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles2.buttonMenu}>
+            <Text style={styles2.textButtonMenu}>Configuracion</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={()=>openModal()} style={styles2.buttonMenu}>
+            <Text style={styles2.textButtonMenu}>Cerrar Sesion</Text>
+          </TouchableOpacity>
+
+        </View>
+        
+      </View>
+
+      <View style={styles2.bottomLineDrawer}></View>
+    </View>
+  )
+
+}
+
+const styles2 = StyleSheet.create({
+  scrollViewDrawer:{
+    flex:1,
+    backgroundColor:'white',
+    paddingTop:0,
+  },
+
+  drawerMenuContainer:{
+    flex:1, 
+    backgroundColor:'white', 
+    borderRightWidth:70, 
+    borderRightColor:'#ABABAB'
+  },
+
+  avatarContainer:{
+    //backgroundColor:'blue',
+    height:210,
+    paddingLeft:20,
+    paddingTop:20,
+    borderBottomWidth:1,
+    borderBottomColor:'#006FB2',
+    marginHorizontal:10
+  },
+
+  imageAvatar:{
+    width:80,
+    height:80,
+  },
+
+  texAvatarNombre:{
+    marginTop:10,
+    fontSize:20,
+    color:'#006FB2',
+  },
+
+  textAvatatarCalificacion:{
+
+  },
+
+  textAvatarNotificaciones:{
+    marginTop:15,
+    fontSize:18,
+    color:'#006FB2'
+  },
+
+  buttonMenu:{
+    
+    height:40,
+    marginVertical:10,
+    marginLeft:20,
+    justifyContent:'center'
+  },
+
+  textButtonMenu:{
+    fontSize:20,
+    color:'#484848'
+  },
+
+  bottomLineDrawer:{
+    height:50,
+    backgroundColor:'#006FB2',
+    borderRightWidth:70,
+    borderRightColor:'#A6D8F6'
+    
+  },
+
+})
+
+
+
+
 
 
 const ContenidoMenu=(props:any)=>{
@@ -38,7 +187,7 @@ const ContenidoMenu=(props:any)=>{
         <View style={styles.avatarContainer}>
             <Image
                 style={styles.imageAvatar} 
-                source={require('../images/avatarPlaceHolder.gif')}
+                source={require('../images/avatarPlaceHolder.png')}
             />
             <Text style={styles.nameAvatar}>Roberto Lopez</Text>
             
@@ -140,6 +289,7 @@ const ContenidoMenu=(props:any)=>{
     </DrawerContentScrollView>
   )
 }
+
 
 
 const styles = StyleSheet.create({
