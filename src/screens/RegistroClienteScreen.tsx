@@ -1,9 +1,77 @@
-import React from 'react'
-import { TouchableOpacity } from 'react-native';
+import { StackScreenProps } from '@react-navigation/stack';
+import axios from 'axios';
+import React, { useState } from 'react'
+import { Alert, TouchableOpacity } from 'react-native';
 import { ImageBackground, Text, View, StyleSheet, Image, TextInput } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { apiUrl } from '../global/api';
+import { isEmail } from '../global/regex';
 
-export const RegistroClienteScreen = () => {
+interface Props extends StackScreenProps<any, any>{}
+
+export const RegistroClienteScreen = ({navigation, route}:Props) => {
+
+    const [newRegistroClienteData, setNewRegistroClienteData] = useState({
+        nombre:'',
+        apellidoP:'',
+        apellidoM:'',
+        fechaNacimiento:'',
+        telCel:'',
+        sexo:'',
+        domicilio:'',
+        colonia:'',
+        estado:'',
+        codigoPostal:'',
+        correo:'',
+        password:''
+    })
+
+    const handleRegistro = async() =>{
+        console.log(newRegistroClienteData)
+
+        if(newRegistroClienteData.nombre==='') return Alert.alert('Ingresa por favor su nombre')
+
+        if(newRegistroClienteData.apellidoP==='') return Alert.alert('Ingresa por favor tu apellido paterno')
+
+        if(newRegistroClienteData.apellidoM==='') return Alert.alert('Ingresa por favor tu apellido materno')
+
+        if(newRegistroClienteData.correo==='') return Alert.alert('Ingresa por favor un correo electronico')
+
+        if(!isEmail.test(newRegistroClienteData.correo) ) return Alert.alert('El correo electronico ingresado no es valido')
+
+        if(newRegistroClienteData.password==='') return Alert.alert('Ingrese por favor una contraseña')
+
+        await axios.get(`${apiUrl}/adduser/${newRegistroClienteData.nombre}/${newRegistroClienteData.apellidoP}/${newRegistroClienteData.apellidoM}/${newRegistroClienteData.correo}/${newRegistroClienteData.password}/3`)
+        .then(function (response) {
+
+            console.log(response.data)
+
+            console.log(response.data.success.status)
+
+            if(!response.data.success.status){
+                return Alert.alert('Ocurrio un error con alguno de sus datos, intente nuevamente')
+            }else{
+
+                Alert.alert(
+                    "Usuario Registrado",
+                    "Tu cuenta fue creada de manera exitosa",
+                    [
+                      { text: "OK", onPress: () => navigation.goBack() }
+                    ]
+                  );
+
+            }
+        
+        })
+        .catch(function (error) {
+          console.log(error);
+          Alert.alert('Ha ocurrido un error, intente nuevamente mas tarde')
+        });
+    }
+
+
+
+
     return (
         <View style={styles.registroClienteContainer}>
             <ImageBackground blurRadius={5} /*source={require('../images/Huellas1.png')}*/ resizeMode="cover" style={styles.imageBackground}>
@@ -17,16 +85,16 @@ export const RegistroClienteScreen = () => {
                     <View style={styles.campoView}>
                         <TextInput
                             style={styles.campoInput}
-                            //onChangeText={onChangeNumber}
-                            //value={number}
+                            onChangeText={(text) => setNewRegistroClienteData({...newRegistroClienteData, nombre:text})}
+                            value={newRegistroClienteData.nombre}
                             placeholder="Nombre "
                             keyboardType='ascii-capable'
                         />
 
                         <TextInput
                             style={styles.campoInput}
-                            //onChangeText={onChangeNumber}
-                            //value={number}
+                            onChangeText={(text) => setNewRegistroClienteData({...newRegistroClienteData, apellidoP:text})}
+                            value={newRegistroClienteData.apellidoP}
                             placeholder="Apellido paterno "
                             keyboardType='ascii-capable'
                         />
@@ -35,16 +103,16 @@ export const RegistroClienteScreen = () => {
                     <View style={styles.campoView}>
                         <TextInput
                             style={styles.campoInput}
-                            //onChangeText={onChangeNumber}
-                            //value={number}
+                            onChangeText={(text) => setNewRegistroClienteData({...newRegistroClienteData, apellidoM:text})}
+                            value={newRegistroClienteData.apellidoM}
                             placeholder="Apellido materno "
                             keyboardType='ascii-capable'
                         />
 
                         <TextInput
                             style={styles.campoInput}
-                            //onChangeText={onChangeNumber}
-                            //value={number}
+                            onChangeText={(text) => setNewRegistroClienteData({...newRegistroClienteData, fechaNacimiento:text})}
+                            value={newRegistroClienteData.fechaNacimiento}
                             placeholder="Fecha de nacimiento "
                             keyboardType='ascii-capable'
                         />
@@ -54,16 +122,16 @@ export const RegistroClienteScreen = () => {
                     <View style={styles.campoView}>
                         <TextInput
                             style={styles.campoInput}
-                            //onChangeText={onChangeNumber}
-                            //value={number}
+                            onChangeText={(text) => setNewRegistroClienteData({...newRegistroClienteData, telCel:text})}
+                            value={newRegistroClienteData.telCel}
                             placeholder="Celular "
-                            keyboardType='ascii-capable'
+                            keyboardType='decimal-pad'
                         />
 
                         <TextInput
                             style={styles.campoInput}
-                            //onChangeText={onChangeNumber}
-                            //value={number}
+                            onChangeText={(text) => setNewRegistroClienteData({...newRegistroClienteData, sexo:text})}
+                            value={newRegistroClienteData.sexo}
                             placeholder="Sexo "
                             keyboardType='ascii-capable'
                         />
@@ -72,16 +140,16 @@ export const RegistroClienteScreen = () => {
                     <View style={styles.campoView}>
                         <TextInput
                             style={styles.campoInput}
-                            //onChangeText={onChangeNumber}
-                            //value={number}
+                            onChangeText={(text) => setNewRegistroClienteData({...newRegistroClienteData, domicilio:text})}
+                            value={newRegistroClienteData.domicilio}
                             placeholder="Domicilio"
                             keyboardType='ascii-capable'
                         />
 
                         <TextInput
                             style={styles.campoInput}
-                            //onChangeText={onChangeNumber}
-                            //value={number}
+                            onChangeText={(text) => setNewRegistroClienteData({...newRegistroClienteData, colonia:text})}
+                            value={newRegistroClienteData.colonia}
                             placeholder="Colonia"
                             keyboardType='ascii-capable'
                         />
@@ -90,16 +158,16 @@ export const RegistroClienteScreen = () => {
                     <View style={styles.campoView}>
                         <TextInput
                             style={styles.campoInput}
-                            //onChangeText={onChangeNumber}
-                            //value={number}
+                            onChangeText={(text) => setNewRegistroClienteData({...newRegistroClienteData, estado:text})}
+                            value={newRegistroClienteData.estado}
                             placeholder="Estado"
                             keyboardType='ascii-capable'
                         />
 
                         <TextInput
                             style={styles.campoInput}
-                            //onChangeText={onChangeNumber}
-                            //value={number}
+                            onChangeText={(text) => setNewRegistroClienteData({...newRegistroClienteData, codigoPostal:text})}
+                            value={newRegistroClienteData.codigoPostal}
                             placeholder="Codigo postal"
                             keyboardType='ascii-capable'
                         />
@@ -108,16 +176,16 @@ export const RegistroClienteScreen = () => {
                     <View style={styles.campoView}>
                         <TextInput
                             style={styles.campoInput}
-                            //onChangeText={onChangeNumber}
-                            //value={number}
+                            onChangeText={(text) => setNewRegistroClienteData({...newRegistroClienteData, correo:text})}
+                            value={newRegistroClienteData.correo}
                             placeholder="Correo"
                             keyboardType='ascii-capable'
                         />
 
                         <TextInput
                             style={styles.campoInput}
-                            //onChangeText={onChangeNumber}
-                            //value={number}
+                            onChangeText={(text) => setNewRegistroClienteData({...newRegistroClienteData, password:text})}
+                            value={newRegistroClienteData.password}
                             placeholder="Contraseña"
                             keyboardType='ascii-capable'
                         />
@@ -128,7 +196,7 @@ export const RegistroClienteScreen = () => {
 
 
 
-                    <TouchableOpacity style={styles.btnForm}>
+                    <TouchableOpacity onPress={()=> handleRegistro()} style={styles.btnForm}>
                         <Text style={{fontSize:15, fontWeight:'bold'}}>Registrar</Text>
                     </TouchableOpacity>
 
